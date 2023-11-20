@@ -54,7 +54,12 @@ class CombinationsPermutationsApp:
             self.combinatory_result_text.insert(tk.END,"Cadena invalida, r debe ser menor al N de elementos en la lista")
             return
         # Calculate permutations and combinations
-        combs = list(combinations(elements, r))
+        if self.checkbox_value.get():
+            print(self.checkbox_value.get())
+            combs = list(combinations(elements, r))
+        else:
+            print(self.checkbox_value.get())
+            combs = set(combinations(elements, r))
 
         # Display results in the text widget
         self.combinatory_result_text.delete(1.0, tk.END)
@@ -73,8 +78,12 @@ class CombinationsPermutationsApp:
             self.permutation_result_text.insert(tk.END,"Cadena invalida, r debe ser menor al N de elementos en la lista")
             return
         # Calculate permutations and combinations
-        perms = list(permutations(elements, r))
-
+        if self.checkbox_value.get():
+            print(self.checkbox_value.get())
+            perms = list(permutations(elements, r))
+        else:
+            print(self.checkbox_value.get())
+            perms = set(permutations(elements, r))
         # Display results in the text widget
         self.permutation_result_text.delete(1.0, tk.END)
         self.permutation_result_text.insert(tk.END, f"Permutaciones: {perms}\n\n")
