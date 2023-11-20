@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from itertools import permutations, combinations
 
-
+#Proyecto final, juego de adivinanza con calculadora interactiva
 class CombinationsPermutationsApp:
 
     def __init__(self, root):
@@ -52,8 +52,16 @@ class CombinationsPermutationsApp:
 
         self.target_phrase_label = ttk.Label(root, text="Frase Objetivo:")
         self.target_phrase_entry = ttk.Entry(root)
+        self.target_phrase_entry['show'] = '*'
+
+        self.hidden_phrase_label = ttk.Label(root, text="Texto escondido")
+        self.hidden_phrase_entry = ttk.Entry(root)
+
         self.target_phrase_label.grid(row=5, column=0, padx=10, pady=5, sticky=tk.E)
-        self.target_phrase_entry.grid(row=5, column=1, padx=10, pady=5, sticky=tk.W)
+        self.hidden_phrase_label.grid(row=6, column=0, padx=10, pady=5, sticky=tk.E)
+
+        self.target_phrase_entry.grid(row=6, column=1, padx=10, pady=5, sticky=tk.W)
+        self.hidden_phrase_entry.grid(row=5, column=1, padx=10, pady=5, sticky=tk.W)
 
         self.validate_button = ttk.Button(root, text="Validar", command=self.validate_phrase)
         self.validate_button.grid(row=5, column=2, columnspan=2, pady=5)
@@ -66,7 +74,11 @@ class CombinationsPermutationsApp:
         r_str = self.r_entry.get()
 
         elements = list(map(str, elements_str.split(' ')))
-        r = int(r_str)
+        try:
+            r = int(r_str)
+        except ValueError:
+            messagebox.showerror("Error", "r debe ser un entero.")
+            return
 
         if r >= len(elements_str):
             self.combinatory_result_text.delete(1.0, tk.END)
@@ -95,7 +107,11 @@ class CombinationsPermutationsApp:
         r_str = self.r_entry.get()
 
         elements = list(map(str, elements_str.split(' ')))
-        r = int(r_str)
+        try:
+            r = int(r_str)
+        except ValueError:
+            messagebox.showerror("Error", "r debe ser un entero.")
+            return
 
         if r >= len(elements):
             self.permutation_result_text.delete(1.0, tk.END)
@@ -123,16 +139,21 @@ class CombinationsPermutationsApp:
 
     def validate_phrase(self):
         target_phrase = self.target_phrase_entry.get().strip().replace(" ", "")
-
+        hide_frase = self.hidden_phrase_entry.get().strip().replace(" ","");
+        r_str = self.r_entry.get()
+        try:
+            r = int(r_str)
+        except ValueError:
+            messagebox.showerror("Error", "r debe ser un entero.")
+            return
         if not target_phrase:
             messagebox.showinfo("Error", "Ingrese una frase objetivo.")
             return
 
         elements_str = self.elements_entry.get()
-        r_str = self.r_entry.get()
+
 
         elements = list(map(str, elements_str.split(' ')))
-        r = int(r_str)
 
         if r >= len(elements):
             messagebox.showinfo("Error", "Cadena inválida. r debe ser menor al número de elementos en la lista.")
@@ -145,14 +166,15 @@ class CombinationsPermutationsApp:
 
         found = False
         for perm in perms:
-            if ''.join(perm) == target_phrase:
+            if ''.join(perm) == target_phrase and target_phrase==hide_frase:
                 found = True
                 break
 
         if found:
-            messagebox.showinfo("¡Correcto!", "¡Esa es la frase correcta!")
+            messagebox.showinfo("¡Correcto!", f"¡Esa es la frase correcta!\nLa frase era \"{self.hidden_phrase_entry.get()}\"")
         else:
-            messagebox.showinfo("Incorrecto", "Esa no es la frase correcta.")
+            messagebox.showerror("Incorrecto", "Esa no es la frase correcta.")
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = CombinationsPermutationsApp(root)
